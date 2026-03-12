@@ -54,10 +54,12 @@ public class App {
                     mostrarTabelaNotas();
                     break;
                 case 4:
-                    //mostrarAprovados();
+                    limpa();
+                    mostrarAprovados();
                     break;
                 case 5:
-                    //mostrarMaiorMedia();
+                    limpa();
+                    mostrarMaiorMedia();
                     break;
                 case 6:
                     //mostrarMediaGeral();
@@ -126,6 +128,19 @@ public class App {
         return soma / 3;
     }
 
+    public static void aprovarAluno(int idx){
+        double media = calcularMedia(idx);
+        if (media >= 7) {
+            if (!aprovados.contains(nomes[idx])) {
+                aprovados.add(nomes[idx]);
+            }
+        } else {
+            if (!reprovados.contains(nomes[idx])) {
+                reprovados.add(nomes[idx]);
+            }
+        }
+    }
+
     public static void mostrarTabelaNotas() throws InterruptedException {
         if (nomes[0] == null) {
             System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
@@ -161,6 +176,51 @@ public class App {
         System.out.println("\nPressione Enter para continuar...");
         sc.nextLine(); // limpa buffer
         sc.nextLine(); // pausa
+    }
+
+    public static void mostrarAprovados() throws InterruptedException{
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+        // garantir que nao repita
+        aprovados.clear();
+        reprovados.clear();
+        for (int i = 0; i < nomes.length; i++) {
+            aprovarAluno(i);
+        }
+        System.out.println("Alunos aprovados:");
+        for (String nome : aprovados) {
+            System.out.println("- " + nome);
+        }
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+
+    }
+
+    public static void mostrarMaiorMedia() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+        double maiorMedia = 0;
+        String alunoMaiorMedia = "";
+        for (int i = 0; i < nomes.length; i++) {
+            double media = calcularMedia(i);
+            if (media > maiorMedia) {
+                maiorMedia = media;
+                alunoMaiorMedia = nomes[i];
+            }
+        }
+        System.out.println("Aluno com maior média: " + alunoMaiorMedia + " (" + String.format("%.2f", maiorMedia) + ")");
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+        
+
     }
     
     

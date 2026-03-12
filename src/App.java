@@ -7,6 +7,7 @@ public class App {
     
     static String nomes[] = new String[5];
     static double notas[][] = new double[5][3];
+    static String[] disciplinas = {"Matemática", "Português", "Ciências"};
 
     static Scanner sc = new Scanner(System.in);
     
@@ -49,7 +50,8 @@ public class App {
                     cadastrarNota();
                     break;
                 case 3:
-                    //mostrarTabelaNotas();
+                    limpa();
+                    mostrarTabelaNotas();
                     break;
                 case 4:
                     //mostrarAprovados();
@@ -100,17 +102,70 @@ public class App {
             limpa();
             System.out.println("Digite as notas do aluno " + nomes[i] + ":");
             for (int j = 0; j < notas[i].length; j++) {
-                System.out.println("Nota " + (j + 1) + ":");
+                System.out.print(disciplinas[j] + " = ");
                 try {
                     notas[i][j] = sc.nextDouble();
                 } catch (Exception e) {
                     System.out.println("Entrada inválida. Por favor, digite um número.");
                     sleep(3000);
-                    sc.nextLine(); //buffer
+                    sc.nextLine(); //buffer, se tirar fica em loop infinito
                     j--; // volta pra mesma nota
-                }
+                }  
             }
         }
+    }
+
+    /**
+     * Calcula a média do aluno no índice fornecido. Retorna 0 se
+     * o índice estiver fora de intervalo ou se não houver disciplinas.
+     *
+     * Outros menus podem invocar este método para verificar se a média
+     * é maior que 7, etc., sem duplicar o cálculo.
+     */
+    public static double calcularMedia(int idx) {
+        if (idx < 0 || idx >= notas.length || disciplinas.length == 0) return 0;
+        double soma = 0;
+        for (int j = 0; j < notas[idx].length; j++) {
+            soma += notas[idx][j];
+        }
+        return soma / disciplinas.length;
+    }
+
+    public static void mostrarTabelaNotas() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+
+        // cabeçalho 
+        System.out.printf("%-20s", "Aluno");
+        for (String d : disciplinas) {
+            System.out.printf("%-12s", d);
+        }
+        System.out.printf("%-12s", "Média");
+        System.out.println();
+
+        // linha separadora
+        for (int k = 0; k < 100; k++){ 
+            System.out.print("-");
+        }
+        System.out.println();
+
+        // dados
+        for (int i = 0; i < nomes.length; i++) {
+            System.out.printf("%-20s", nomes[i]);
+            for (int j = 0; j < notas[i].length; j++) {
+                System.out.printf("%-12.2f", notas[i][j]);
+            }
+            double media = calcularMedia(i);
+            System.out.printf("%-12.2f", media);
+            System.out.println();
+        }
+
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
     }
     
     

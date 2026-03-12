@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import static java.lang.Thread.sleep;
 
@@ -62,16 +63,20 @@ public class App {
                     mostrarMaiorMedia();
                     break;
                 case 6:
-                    //mostrarMediaGeral();
+                    limpa();
+                    mostrarMediaGeral();
                     break;
                 case 7:
-                    //mostrarDisciplinaMaiorMedia();
+                    limpa();
+                    mostrarDisciplinaMaiorMedia();
                     break;
                 case 8:
-                    //mostrarAprovadosOrdemAlfabetica();
+                    limpa();
+                    mostrarAprovadosOrdemAlfabetica();
                     break;
                 case 9:
-                    //mostrarReprovadosOrdemAlfabetica();
+                    limpa();
+                    mostrarReprovadosOrdemAlfabetica();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -88,7 +93,7 @@ public class App {
     public static void cadastrarAluno() {
         sc.nextLine(); //limpa buffer
         for (int i = 0; i < nomes.length; i++) {
-            System.out.println("Digite o nome do aluno " + (i + 1) + ":");
+            System.out.println("Digite o nome do(a) aluno(a) " + (i + 1) + ":");
             nomes[i] = sc.nextLine();
         }
 
@@ -102,7 +107,7 @@ public class App {
         }
         for (int i = 0; i < notas.length; i++) {
             limpa();
-            System.out.println("Digite as notas do aluno " + nomes[i] + ":");
+            System.out.println("Digite as notas do(a) aluno(a) " + nomes[i] + ":");
             for (int j = 0; j < notas[i].length; j++) {
                 System.out.print(disciplinas[j] + " = ");
                 try {
@@ -222,9 +227,86 @@ public class App {
         
 
     }
-    
-    
-    
+
+    public static void mostrarMediaGeral() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+        double somaMedias = 0;
+        for (int i = 0; i < nomes.length; i++) {
+            somaMedias += calcularMedia(i);
+        }
+        double mediaGeral = somaMedias / nomes.length;
+        System.out.println("Média geral da turma: " + String.format("%.2f", mediaGeral));
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+    }
+
+    public static void mostrarDisciplinaMaiorMedia() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+        double maiorMediaDisciplina = 0;
+        String disciplinaMaiorMedia = "";
+        for (int j = 0; j < disciplinas.length; j++) {
+            double somaNotas = 0;
+            for (int i = 0; i < nomes.length; i++) {
+                somaNotas += notas[i][j];
+            }
+            double mediaDisciplina = somaNotas / nomes.length;
+            if (mediaDisciplina > maiorMediaDisciplina) {
+                maiorMediaDisciplina = mediaDisciplina;
+                disciplinaMaiorMedia = disciplinas[j];
+            }
+        }
+        System.out.println("Disciplina com maior média: " + disciplinaMaiorMedia + " (" + String.format("%.2f", maiorMediaDisciplina) + ")");
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+    }
+
+    public static void mostrarAprovadosOrdemAlfabetica() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+
+        Collections.sort(aprovados);
+        System.out.println("Alunos aprovados em ordem alfabética:");
+        for (String nome : aprovados) {
+            System.out.println("- " + nome);
+        }
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+
+    }
+
+    public static void mostrarReprovadosOrdemAlfabetica() throws InterruptedException {
+        if (nomes[0] == null) {
+            System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
+            sleep(3000);
+            return;
+        }
+
+        Collections.sort(reprovados);
+        System.out.println("Alunos reprovados em ordem alfabética:");
+        for (String nome : reprovados) {
+            System.out.println("- " + nome);
+        }
+        System.out.println("\nPressione Enter para continuar...");
+        sc.nextLine(); // limpa buffer
+        sc.nextLine(); // pausa
+
+    }
+
+
     public static void main(String[] args) throws Exception {
         menu();
    

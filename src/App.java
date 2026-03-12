@@ -115,20 +115,15 @@ public class App {
         }
     }
 
-    /**
-     * Calcula a média do aluno no índice fornecido. Retorna 0 se
-     * o índice estiver fora de intervalo ou se não houver disciplinas.
-     *
-     * Outros menus podem invocar este método para verificar se a média
-     * é maior que 7, etc., sem duplicar o cálculo.
-     */
     public static double calcularMedia(int idx) {
-        if (idx < 0 || idx >= notas.length || disciplinas.length == 0) return 0;
+        if (idx < 0 || idx >= notas.length) {
+            return 0;
+        }
         double soma = 0;
         for (int j = 0; j < notas[idx].length; j++) {
             soma += notas[idx][j];
         }
-        return soma / disciplinas.length;
+        return soma / 3;
     }
 
     public static void mostrarTabelaNotas() throws InterruptedException {

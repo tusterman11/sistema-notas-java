@@ -153,34 +153,29 @@ public class App {
             return;
         }
 
-        // cabeçalho 
-        System.out.printf("%-20s", "Aluno");
-        for (String d : disciplinas) {
-            System.out.printf("%-12s", d);
-        }
-        System.out.printf("%-12s", "Média");
-        System.out.println();
-
-        // linha separadora
-        for (int k = 0; k < 100; k++){ 
-            System.out.print("-");
-        }
-        System.out.println();
-
-        // dados
         for (int i = 0; i < nomes.length; i++) {
-            System.out.printf("%-20s", nomes[i]);
-            for (int j = 0; j < notas[i].length; j++) {
-                System.out.printf("%-12.2f", notas[i][j]);
-            }
-            double media = calcularMedia(i);
-            System.out.printf("%-12.2f", media);
-            System.out.println();
-        }
+            if (nomes[i] == null) continue; // pula se não cadastrado
+            limpa();
+            System.out.println("Tabela de Notas - Aluno: " + nomes[i]);
+            System.out.println("==========================");
 
-        System.out.println("\nPressione Enter para continuar...");
-        sc.nextLine(); // limpa buffer
-        sc.nextLine(); // pausa
+            // cabeçalho
+            System.out.printf("%-15s %-10s\n", "Disciplina", "Nota");
+            System.out.println("-------------------------");
+
+            // dados
+            for (int j = 0; j < notas[i].length; j++) {
+                System.out.printf("%-15s %-10.2f\n", disciplinas[j], notas[i][j]);
+            }
+
+            double media = calcularMedia(i);
+            System.out.println("-------------------------");
+            System.out.printf("%-15s %-10.2f\n", "Média", media);
+
+            System.out.println("\nPressione Enter para continuar...");
+            sc.nextLine(); // limpa buffer
+            sc.nextLine(); // pausa
+        }
     }
 
     public static void mostrarAprovados() throws InterruptedException{

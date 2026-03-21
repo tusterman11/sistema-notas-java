@@ -6,20 +6,26 @@ import static java.lang.Thread.sleep;
 public class App {
     
     
+    // Armazena os nomes dos alunos
     static String nomes[] = new String[5];
+    // Armazena as notas de cada aluno em cada disciplina
     static double notas[][] = new double[5][3];
+    // Disciplinas usadas no sistema
     static String[] disciplinas = {"Matemática", "Português", "Ciências"};
 
+    // Scanner para entrada do usuário
     static Scanner sc = new Scanner(System.in);
     
+    // Listas de alunos aprovados e reprovados, atualizadas conforme as notas
     static ArrayList<String> aprovados = new ArrayList<>();
     static ArrayList<String> reprovados = new ArrayList<>();
 
+    // Limpa tela
     public static void limpa() {  
         System.out.print("\033\143");    
         System.out.flush();
     }  
-
+    // Exibe o menu principal e executa ações conforme a opção do usuário
     public static void menu() throws InterruptedException {
         
         int opcao = -1;
@@ -39,8 +45,6 @@ public class App {
                 sc.nextLine(); //limpa buffer
                 continue;
             }
-            
-
             switch (opcao) {
                 case 1:
                     limpa();
@@ -84,19 +88,22 @@ public class App {
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
-        } while (opcao != 0);
+        } while (opcao != 0);       
+    }   
 
-        
-            
-    }
-    
     public static void cadastrarAluno() {
         sc.nextLine(); //limpa buffer
         for (int i = 0; i < nomes.length; i++) {
-            System.out.println("Digite o nome do(a) aluno(a) " + (i + 1) + ":");
-            nomes[i] = sc.nextLine();
+            String nome;
+            do {
+                System.out.println("Digite o nome do(a) aluno(a) " + (i + 1) + ":");
+                nome = sc.nextLine().trim();
+                if (nome.isEmpty()) {
+                    System.out.println("Nome inválido. O nome não pode ser vazio. Tente novamente.");
+                }
+            } while (nome.isEmpty());
+            nomes[i] = nome;
         }
-
     }
     
     public static void cadastrarNota() throws InterruptedException {
@@ -109,15 +116,23 @@ public class App {
             limpa();
             System.out.println("Digite as notas do(a) aluno(a) " + nomes[i] + ":");
             for (int j = 0; j < notas[i].length; j++) {
-                System.out.print(disciplinas[j] + " = ");
-                try {
-                    notas[i][j] = sc.nextDouble();
-                } catch (Exception e) {
-                    System.out.println("Entrada inválida. Por favor, digite um número.");
-                    sleep(3000);
-                    sc.nextLine(); //buffer, se tirar fica em loop infinito
-                    j--; // volta pra mesma nota
-                }  
+                double nota;
+                while (true) {
+                    System.out.print(disciplinas[j] + " = ");
+                    try {
+                        nota = sc.nextDouble();
+                        if (nota < 0 || nota > 10) {
+                            System.out.println("Nota inválida. Digite um valor entre 0 e 10.");
+                            continue;
+                        }
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Por favor, digite um número.");
+                        sleep(3000);
+                        sc.nextLine(); // limpa buffer
+                    }
+                }
+                notas[i][j] = nota;
             }
         }
     }
@@ -146,6 +161,16 @@ public class App {
         }
     }
 
+    // Recalcula as listas de aprovados/reprovados a cada vez que mostra
+    public static void atualizarListasAprovacao() {
+        aprovados.clear();
+        reprovados.clear();
+        for (int i = 0; i < nomes.length; i++) {
+            aprovarAluno(i);
+        }
+    }
+
+    // Exibe a tabela completa de notas e médias
     public static void mostrarTabelaNotas() throws InterruptedException {
         if (nomes[0] == null) {
             System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
@@ -189,12 +214,7 @@ public class App {
             sleep(3000);
             return;
         }
-        // garantir que nao repita
-        aprovados.clear();
-        reprovados.clear();
-        for (int i = 0; i < nomes.length; i++) {
-            aprovarAluno(i);
-        }
+        atualizarListasAprovacao();
         System.out.println("Alunos aprovados:");
         for (String nome : aprovados) {
             System.out.println("- " + nome);
@@ -277,6 +297,7 @@ public class App {
             return;
         }
 
+        atualizarListasAprovacao();
         Collections.sort(aprovados);
         System.out.println("Alunos aprovados em ordem alfabética:");
         for (String nome : aprovados) {
@@ -295,6 +316,7 @@ public class App {
             return;
         }
 
+        atualizarListasAprovacao();
         Collections.sort(reprovados);
         System.out.println("Alunos reprovados em ordem alfabética:");
         for (String nome : reprovados) {
@@ -309,9 +331,6 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         menu();
-   
-   
-   
    
    
    

@@ -6,26 +6,26 @@ import static java.lang.Thread.sleep;
 public class App {
     
     
-    // Armazena os nomes dos alunos
+    // armazena os nomes dos alunos
     static String nomes[] = new String[5];
-    // Armazena as notas de cada aluno em cada disciplina
+    // armazena as notas de cada aluno em cada disciplina
     static double notas[][] = new double[5][3];
-    // Disciplinas usadas no sistema
+    // armazena disciplinas
     static String[] disciplinas = {"Matemática", "Português", "Ciências"};
 
-    // Scanner para entrada do usuário
+    // scanner pra input
     static Scanner sc = new Scanner(System.in);
     
-    // Listas de alunos aprovados e reprovados, atualizadas conforme as notas
+    // lista dos aprovados e reprovados
     static ArrayList<String> aprovados = new ArrayList<>();
     static ArrayList<String> reprovados = new ArrayList<>();
 
-    // Limpa tela
+    // limpa tela
     public static void limpa() {  
         System.out.print("\033\143");    
         System.out.flush();
     }  
-    // Exibe o menu principal e executa ações conforme a opção do usuário
+    // exibe o menu e executa cada opção escolhida
     public static void menu() throws InterruptedException {
         
         int opcao = -1;
@@ -117,7 +117,7 @@ public class App {
             System.out.println("Digite as notas do(a) aluno(a) " + nomes[i] + ":");
             for (int j = 0; j < notas[i].length; j++) {
                 double nota;
-                while (true) {
+                while (true) { // loop para validacao
                     System.out.print(disciplinas[j] + " = ");
                     try {
                         nota = sc.nextDouble();
@@ -127,7 +127,7 @@ public class App {
                         }
                         break;
                     } catch (Exception e) {
-                        System.out.println("Entrada inválida. Por favor, digite um número.");
+                        System.out.println("Entrada inválida. Por favor, digite um número. (Use vírgula para decimais)");
                         sleep(3000);
                         sc.nextLine(); // limpa buffer
                     }
@@ -137,6 +137,7 @@ public class App {
         }
     }
 
+    // calcula a media de um aluno com base no índice
     public static double calcularMedia(int idx) {
         if (idx < 0 || idx >= notas.length) {
             return 0;
@@ -148,6 +149,7 @@ public class App {
         return soma / 3;
     }
 
+    // se não conter alunos na lista, adiciona
     public static void aprovarAluno(int idx){
         double media = calcularMedia(idx);
         if (media >= 7) {
@@ -161,7 +163,7 @@ public class App {
         }
     }
 
-    // Recalcula as listas de aprovados/reprovados a cada vez que mostra
+    // atualiza as listas de aprovados/reprovados a cada vez que mostra
     public static void atualizarListasAprovacao() {
         aprovados.clear();
         reprovados.clear();
@@ -179,13 +181,12 @@ public class App {
         }
 
         for (int i = 0; i < nomes.length; i++) {
-            if (nomes[i] == null) continue; // pula se não cadastrado
             limpa();
             System.out.println("Tabela de Notas - Aluno: " + nomes[i]);
             System.out.println("==========================");
 
             // cabeçalho
-            System.out.printf("%-15s %-10s\n", "Disciplina", "Nota");
+            System.out.printf("%-15s %-10s\n", "Disciplina", "Nota"); //%-15s = string com largura de 15 alinhada à esquerda
             System.out.println("-------------------------");
 
             // dados
@@ -203,6 +204,7 @@ public class App {
         }
     }
 
+    // mostra aprovados
     public static void mostrarAprovados() throws InterruptedException{
         if (nomes[0] == null) {
             System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
@@ -231,7 +233,7 @@ public class App {
         for (int i = 0; i < nomes.length; i++) {
             double media = calcularMedia(i);
             if (media > maiorMedia) {
-                maiorMedia = media;
+                maiorMedia = media; // se media atual é maior que anterior, substitui
                 alunoMaiorMedia = nomes[i];
             }
         }
@@ -251,7 +253,7 @@ public class App {
         }
         double somaMedias = 0;
         for (int i = 0; i < nomes.length; i++) {
-            somaMedias += calcularMedia(i);
+            somaMedias += calcularMedia(i); // cálcula a media de cada aluno usando a funcao e soma na variável 
         }
         double mediaGeral = somaMedias / nomes.length;
         System.out.println("Média geral da turma: " + String.format("%.2f", mediaGeral));
@@ -268,15 +270,15 @@ public class App {
         }
         double maiorMediaDisciplina = 0;
         String disciplinaMaiorMedia = "";
-        for (int j = 0; j < disciplinas.length; j++) {
+        for (int j = 0; j < disciplinas.length; j++) { // laço invertido coluna por coluna pra calcular a média de cada disciplina 
             double somaNotas = 0;
             for (int i = 0; i < nomes.length; i++) {
                 somaNotas += notas[i][j];
             }
             double mediaDisciplina = somaNotas / nomes.length;
-            if (mediaDisciplina > maiorMediaDisciplina) {
+            if (mediaDisciplina > maiorMediaDisciplina) { // se média atual da disciplina é maior que a anterior, substitui
                 maiorMediaDisciplina = mediaDisciplina;
-                disciplinaMaiorMedia = disciplinas[j];
+                disciplinaMaiorMedia = disciplinas[j]; // guarda o nome da disciplina pelo indice j
             }
         }
         System.out.println("Disciplina com maior média: " + disciplinaMaiorMedia + " (" + String.format("%.2f", maiorMediaDisciplina) + ")");
@@ -285,6 +287,7 @@ public class App {
         sc.nextLine(); // pausa
     }
 
+    // mostra aprovados em ordem alfabética
     public static void mostrarAprovadosOrdemAlfabetica() throws InterruptedException {
         if (nomes[0] == null) {
             System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
@@ -304,6 +307,7 @@ public class App {
 
     }
 
+    // mesma coisa pra reprovados
     public static void mostrarReprovadosOrdemAlfabetica() throws InterruptedException {
         if (nomes[0] == null) {
             System.out.println("Nenhum aluno cadastrado. Por favor, cadastre os alunos primeiro.");
@@ -323,7 +327,7 @@ public class App {
 
     }
 
-
+    // incrivel main de 2 linhas
     public static void main(String[] args) throws Exception {
         menu();
    
